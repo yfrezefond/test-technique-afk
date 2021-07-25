@@ -9,16 +9,27 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
+/**
+ * Aspect that allows to log the execution of the API
+ */
 @Aspect
 @Component
 public class LogSupervision {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LogSupervision.class);
 
+    /**
+     * Log the input, output and execution time of methods annotated with the @Supervision annotation
+     *
+     * @param joinPoint
+     * @param supervision
+     * @return the result of the operation
+     * @throws Throwable any exception throwed during the execution of the joinPoint
+     */
     @Around("@annotation(supervision)")
     public Object apiSupervision(ProceedingJoinPoint joinPoint, Supervision supervision) throws Throwable {
         long start = System.currentTimeMillis();
-        if(LOGGER.isDebugEnabled()) {
+        if (LOGGER.isDebugEnabled()) {
             String args = Arrays.toString(joinPoint.getArgs());
             LOGGER.debug("Enter: {}.{}() with argument[s] = {}", joinPoint.getSignature().getDeclaringTypeName(),
                     joinPoint.getSignature().getName(), args);
@@ -35,6 +46,5 @@ public class LogSupervision {
                     joinPoint.getSignature().getName(), duree);
         }
     }
-
 
 }

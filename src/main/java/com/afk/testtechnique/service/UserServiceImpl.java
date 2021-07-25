@@ -9,12 +9,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Service that allows users to be managed
+ */
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Create a new user
+     *
+     * @param user
+     * @return the user created
+     */
     public User createUser(User user) {
         Optional<User> existingUser = userRepository.findByUsername(user.getUsername());
         if (existingUser.isPresent()) {
@@ -23,6 +32,12 @@ public class UserServiceImpl implements UserService{
         return userRepository.save(user);
     }
 
+    /**
+     * Find user by username
+     *
+     * @param username
+     * @return the user associated with the username
+     */
     public User findByUsername(String username) {
         Optional<User> user = userRepository.findByUsername(username);
         return user.orElseThrow(() -> new UserNotFoundException(username));

@@ -3,7 +3,6 @@ package com.afk.testtechnique.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.util.Date;
 
 public class UserDTO {
 
@@ -23,8 +22,6 @@ public class UserDTO {
     private String company;
 
     private String gender;
-
-    private Date dateOfBirth;
 
     public String getUsername() {
         return username;
@@ -74,14 +71,6 @@ public class UserDTO {
         this.gender = gender;
     }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
     @Override
     public String toString() {
         return "UserDTO{" +
@@ -91,7 +80,6 @@ public class UserDTO {
                 ", email='" + email + '\'' +
                 ", company='" + company + '\'' +
                 ", gender='" + gender + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
                 '}';
     }
 }

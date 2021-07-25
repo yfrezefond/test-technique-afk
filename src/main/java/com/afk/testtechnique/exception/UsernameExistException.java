@@ -1,5 +1,8 @@
 package com.afk.testtechnique.exception;
 
+/**
+ * Exception indicating that the username already exists
+ */
 public class UsernameExistException extends RuntimeException {
 
     private final String username;
