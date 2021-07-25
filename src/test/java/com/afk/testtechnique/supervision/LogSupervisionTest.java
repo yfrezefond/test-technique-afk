@@ -1,28 +1,21 @@
 package com.afk.testtechnique.supervision;
 
-import com.afk.testtechnique.TestTechniqueApplication;
 import com.afk.testtechnique.controller.UserController;
 import com.afk.testtechnique.dto.UserDTO;
 import com.afk.testtechnique.model.User;
 import com.afk.testtechnique.service.UserService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator;
-import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static com.afk.testtechnique.TestConstants.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
-public class LogSupervisionTest {
+class LogSupervisionTest {
 
     @Autowired
     private UserController userController;
@@ -34,7 +27,7 @@ public class LogSupervisionTest {
     private LogSupervision logSupervision;
 
     @Test
-    public void shouldBeExecutedWhenCreatingUser() throws Throwable {
+    void shouldBeExecutedWhenCreatingUser() throws Throwable {
         User user = new User(USERNAME, FIRST_NAME, LAST_NAME, EMAIL);
         when(userService.createUser(any(User.class))).thenReturn(user);
         userController.createUser(new UserDTO());
@@ -42,7 +35,7 @@ public class LogSupervisionTest {
     }
 
     @Test
-    public void shouldBeExecutedWhenFindingUser() throws Throwable {
+    void shouldBeExecutedWhenFindingUser() throws Throwable {
         User user = new User(USERNAME, FIRST_NAME, LAST_NAME, EMAIL);
         when(userService.findByUsername(anyString())).thenReturn(user);
         userController.findUserByUsername(USERNAME);

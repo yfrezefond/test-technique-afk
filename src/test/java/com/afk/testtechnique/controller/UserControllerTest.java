@@ -5,14 +5,12 @@ import com.afk.testtechnique.exception.UsernameExistException;
 import com.afk.testtechnique.model.User;
 import com.afk.testtechnique.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.afk.testtechnique.TestConstants.*;
@@ -26,9 +24,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
-public class UserControllerTest {
+class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -38,13 +35,13 @@ public class UserControllerTest {
 
     private ObjectMapper mapper;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         mapper = new ObjectMapper();
     }
 
     @Test
-    public void shouldNotFindUser() throws Exception {
+    void shouldNotFindUser() throws Exception {
         when(userService.findByUsername(anyString())).thenThrow(new UserNotFoundException(USERNAME));
         mockMvc.perform(get(String.format("/api/users/%s", USERNAME))).andDo(print())
                 .andExpect(status().isNotFound())
@@ -52,7 +49,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldReturnUser() throws Exception {
+    void shouldReturnUser() throws Exception {
         User user = new User(USERNAME, FIRST_NAME, LAST_NAME, EMAIL);
         when(userService.findByUsername(anyString())).thenReturn(user);
         mockMvc.perform(get(String.format("/api/users/%s", USERNAME))).andDo(print())
@@ -64,7 +61,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldCreateUser() throws Exception {
+    void shouldCreateUser() throws Exception {
         User user = new User(USERNAME, FIRST_NAME, LAST_NAME, EMAIL);
         when(userService.createUser(any(User.class))).thenReturn(user);
         String jsonUser = mapper.writeValueAsString(user);
@@ -78,7 +75,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldNotReCreateExistingUser() throws Exception {
+    void shouldNotReCreateExistingUser() throws Exception {
         when(userService.createUser(any(User.class))).thenThrow(new UsernameExistException(USERNAME));
         User user = new User(USERNAME, FIRST_NAME, LAST_NAME, EMAIL);
         String jsonUser = mapper.writeValueAsString(user);
@@ -89,7 +86,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldNotCreateUserWithInvalidParameters() throws Exception {
+    void shouldNotCreateUserWithInvalidParameters() throws Exception {
         User user = new User(null, FIRST_NAME, LAST_NAME, EMAIL);
         String jsonUser = mapper.writeValueAsString(user);
         mockMvc.perform(post("/api/users").content(jsonUser).contentType(MediaType.APPLICATION_JSON))
@@ -99,7 +96,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldNotCreateUserWithBadEmail() throws Exception {
+    void shouldNotCreateUserWithBadEmail() throws Exception {
         User user = new User(USERNAME, FIRST_NAME, LAST_NAME, "bad email");
         String jsonUser = mapper.writeValueAsString(user);
         mockMvc.perform(post("/api/users").content(jsonUser).contentType(MediaType.APPLICATION_JSON))

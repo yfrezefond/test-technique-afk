@@ -11,7 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @SpringBootTest
-class TestTechniqueApplicationTests {
+class TestTechniqueApplicationTest {
 
 	@Autowired
 	private UserController userController;

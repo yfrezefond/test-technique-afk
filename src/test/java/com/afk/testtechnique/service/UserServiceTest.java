@@ -4,12 +4,10 @@ import com.afk.testtechnique.exception.UserNotFoundException;
 import com.afk.testtechnique.exception.UsernameExistException;
 import com.afk.testtechnique.model.User;
 import com.afk.testtechnique.repository.UserRepository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
@@ -17,13 +15,13 @@ import static com.afk.testtechnique.TestConstants.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserServiceTest {
+class UserServiceTest {
 
     @Autowired
     UserService userService;
@@ -31,15 +29,17 @@ public class UserServiceTest {
     @MockBean
     private UserRepository userRepository;
 
-    @Test(expected = UserNotFoundException.class)
-    public void shouldNotFindUser() {
+    @Test
+    void shouldNotFindUser() {
         Optional<User> user = Optional.empty();
         when(userRepository.findByUsername(anyString())).thenReturn(user);
-        userService.findByUsername("username");
+        assertThrows(UserNotFoundException.class, () -> {
+            userService.findByUsername("username");
+        });
     }
 
-    @Test()
-    public void shouldReturnUser() {
+    @Test
+    void shouldReturnUser() {
         Optional<User> userOptional = Optional.of(new User(USERNAME, FIRST_NAME, LAST_NAME, EMAIL));
         when(userRepository.findByUsername(anyString())).thenReturn(userOptional);
         User user = userService.findByUsername(USERNAME);
@@ -50,7 +50,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldCreateUser() throws Exception {
+    void shouldCreateUser() throws Exception {
         User userToCreate = new User(USERNAME, FIRST_NAME, LAST_NAME, EMAIL);
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
         when(userRepository.save(any(User.class))).thenReturn(userToCreate);
@@ -61,11 +61,13 @@ public class UserServiceTest {
         assertThat(user, hasProperty(EMAIL_PROPERTY, is(EMAIL)));
     }
 
-    @Test(expected = UsernameExistException.class)
-    public void shouldNotReCreateExistingUser() throws Exception {
+    @Test
+    void shouldNotReCreateExistingUser() throws Exception {
         User user = new User(USERNAME, FIRST_NAME, LAST_NAME, EMAIL);
         Optional<User> optionalUser = Optional.of(user);
         when(userRepository.findByUsername(anyString())).thenReturn(optionalUser);
-        userService.createUser(user);
+        assertThrows(UsernameExistException.class, () -> {
+            userService.createUser(user);
+        });
     }
 }
